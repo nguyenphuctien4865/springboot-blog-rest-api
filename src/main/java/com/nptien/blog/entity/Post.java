@@ -10,7 +10,6 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Entity
 @Table(name = "posts",uniqueConstraints = {@UniqueConstraint(columnNames =  {"title"})})
 public class Post {

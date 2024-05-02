@@ -1,2 +1,12 @@
-package com.nptien.blog.repository;public interface RoleRepository {
+package com.nptien.blog.repository;
+
+import com.nptien.blog.entity.Role;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface RoleRepository extends JpaRepository<Role,Long> {
+    Optional<Role> findByName(String name);
+    
 }

@@ -6,12 +6,16 @@ import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nptien.blog.dtos.PostDto;
 import com.nptien.blog.dtos.PostRespone;
 import com.nptien.blog.service.PostService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
-@RequestMapping("/api/v1/posts/")
+@RequestMapping("/api/v1/posts")
 public class PostController {
 
     @Autowired
@@ -31,8 +35,9 @@ public class PostController {
         this.postService = postService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
+    public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
         return new ResponseEntity<>(postService.createPost(postDto), HttpStatus.CREATED);
     }
 
@@ -46,6 +51,7 @@ public class PostController {
     // HttpStatus.OK);
     // }
 
+    
     @GetMapping
     public PostRespone getAllPosts(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
@@ -56,16 +62,20 @@ public class PostController {
         return postService.getAllPosts(pageNo, pageSize, sort, sortDir);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<PostDto> getPostById(@PathVariable Long id) {
         return new ResponseEntity<>(postService.getPostById(id), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<PostDto> updatePost(@PathVariable Long id, @RequestBody PostDto postDto) {
+    public ResponseEntity<PostDto> updatePost(@PathVariable Long id,
+            @Valid @RequestBody PostDto postDto) {
         return new ResponseEntity<>(postService.updatePost(id, postDto), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePost(@PathVariable Long id) {
         postService.deletePost(id);
