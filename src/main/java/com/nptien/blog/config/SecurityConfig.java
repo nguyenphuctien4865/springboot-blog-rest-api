@@ -53,35 +53,38 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(HttpMethod.GET,"/api/v1/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(authenticationEntryPoint))
                 .sessionManagement(session -> session
-                    .sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS));
-                http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                        .sessionCreationPolicy(
+                                org.springframework.security.config.http.SessionCreationPolicy.STATELESS));
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
 
     }
-    
-   @Bean
-public AuthenticationManager authenticationManager(
-        AuthenticationConfiguration authenticationConfiguration) throws Exception {
-            return authenticationConfiguration.getAuthenticationManager();
-    
-}
+
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+
+    }
 
     // @Bean
     // protected UserDetailsService userDetailsService() {
-    //     UserDetails admin = User.builder().username("admin")
-    //             .password(passwordEncoder().encode("admin"))
-    //             .roles("ADMIN").build();
-    //     UserDetails user = User.builder().username("user")
-    //             .password(passwordEncoder().encode("user"))
-    //             .roles("USER").build();
+    // UserDetails admin = User.builder().username("admin")
+    // .password(passwordEncoder().encode("admin"))
+    // .roles("ADMIN").build();
+    // UserDetails user = User.builder().username("user")
+    // .password(passwordEncoder().encode("user"))
+    // .roles("USER").build();
 
-    //     return new InMemoryUserDetailsManager(admin, user);
+    // return new InMemoryUserDetailsManager(admin, user);
     // }
 
 }

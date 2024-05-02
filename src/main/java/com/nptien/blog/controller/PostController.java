@@ -62,7 +62,6 @@ public class PostController {
         return postService.getAllPosts(pageNo, pageSize, sort, sortDir);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<PostDto> getPostById(@PathVariable Long id) {
         return new ResponseEntity<>(postService.getPostById(id), HttpStatus.OK);
